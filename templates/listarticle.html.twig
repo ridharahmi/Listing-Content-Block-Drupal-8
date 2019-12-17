@@ -1,0 +1,28 @@
+<section class="list_item">
+    {% for node in items %}
+        <div class="article_item">
+
+            {% if node.image %}
+                <div class="img_article">
+                    <img class="img-responsive" src="{{ node.image }}">
+                </div>
+            {% endif %}
+
+            {% if node.title %}
+                <h2 class="title_article">
+                    <a href="{{ path('entity.node.canonical', {'node': node.id}) }}">
+                        {{ node.title }}
+                    </a>
+                </h2>
+            {% endif %}
+
+            {% if node.body %}
+                <p class="desc_article">
+                    {% set text = node.body|render %}
+                    {{ text|length > 200 ? text|slice(0, 250)|raw ~ '...' : text|raw }}
+                </p>
+            {% endif %}
+        </div>
+    {% endfor %}
+</section>
+
