@@ -4,7 +4,7 @@
 
             {% if node.image %}
                 <div class="img_article">
-                    <img class="img-responsive" src="{{ node.image }}">
+                    <img class="img-responsive" src="{{ node.image }}" alt="{{ node.title }}">
                 </div>
             {% endif %}
 
@@ -22,6 +22,7 @@
                     {{ text|length > 200 ? text|slice(0, 250)|raw ~ '...' : text|raw }}
                 </p>
             {% endif %}
+
         </div>
     {% endfor %}
 </section>

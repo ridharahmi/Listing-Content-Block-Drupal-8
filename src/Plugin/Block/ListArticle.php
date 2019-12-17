@@ -2,8 +2,8 @@
 
 namespace Drupal\listarticle_block\Plugin\Block;
 
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
 
 /**
@@ -23,11 +23,17 @@ class ListArticle extends BlockBase
     public function build()
     {
         $lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
+        $config = $this->getConfiguration();
+        $content_type = $config['type'];
+        $rang = $config['rang'];
+
+        //kint($rang);
         $query = \Drupal::entityQuery('node')
-            ->condition('type', 'article')
+            ->condition('type', $content_type)
             ->condition('langcode', $lang)
-            ->condition('uid', 1)
-            ->pager(3);
+            ->range(0, $rang);
+
+
         $filter_nids = $query->execute();
         //dsm($filter_nids);
 
@@ -45,6 +51,48 @@ class ListArticle extends BlockBase
             '#theme' => 'list_article',
             '#items' => $items,
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function defaultConfiguration()
+    {
+        return [
+            'type' => 'article',
+            'rang' => 3,
+        ];
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function blockForm($form, FormStateInterface $form_state)
+    {
+
+        $form['type_content'] = [
+            '#type' => 'textfield',
+            '#title' => $this->t('Type Content'),
+            '#description' => $this->t('Who do you want to say Type Content to?'),
+            '#default_value' => $this->configuration['type']
+        ];
+        $form['rang_content'] = array(
+            '#title' => $this->t('Number content'),
+            '#description' => $this->t('This is Number content'),
+            '#type' => 'number',
+            '#default_value' => $this->configuration['rang'],
+        );
+        return $form;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function blockSubmit($form, FormStateInterface $form_state)
+    {
+        $this->configuration['type'] = $form_state->getValue('type_content');
+        $this->configuration['rang'] = $form_state->getValue('rang_content');
     }
 
 
