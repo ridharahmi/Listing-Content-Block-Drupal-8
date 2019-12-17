@@ -35,7 +35,7 @@ class ListArticle extends BlockBase
 
 
         $filter_nids = $query->execute();
-        //dsm($filter_nids);
+
 
         $nodes = Node::loadMultiple($filter_nids);
 
