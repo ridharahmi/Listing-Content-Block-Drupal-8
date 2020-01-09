@@ -5,7 +5,6 @@ namespace Drupal\listarticle_block\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
-
 /**
  * Provides a 'ListArticleBlock' block.
  *
@@ -70,13 +69,26 @@ class ListArticle extends BlockBase
      */
     public function blockForm($form, FormStateInterface $form_state)
     {
-
-        $form['type_content'] = [
-            '#type' => 'textfield',
-            '#title' => $this->t('Type Content'),
-            '#description' => $this->t('Who do you want to say Type Content to?'),
-            '#default_value' => $this->configuration['type']
-        ];
+        $node_types = \Drupal\node\Entity\NodeType::loadMultiple();
+        $options = [];
+        foreach ($node_types as $node_type) {
+            $options[$node_type->id()] = $node_type->label();
+        }
+        $form['type_content'] = array(
+            '#type' => 'radios',
+            '#title' => t('Type Content'),
+            '#default_value' => 2,
+            '#description' => t('Who do you want to say Type Content to?'),
+            '#options' =>  $options,
+            '#default_value' => $this->configuration['type'],
+            '#required' => required
+        );
+//        $form['type_content'] = [
+//            '#type' => 'textfield',
+//            '#title' => $this->t('Type Content'),
+//            '#description' => $this->t('Who do you want to say Type Content to?'),
+//            '#default_value' => $this->configuration['type']
+//        ];
         $form['rang_content'] = array(
             '#title' => $this->t('Number content'),
             '#description' => $this->t('This is Number content'),
